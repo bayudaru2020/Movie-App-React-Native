@@ -1,34 +1,39 @@
 import React from 'react'
-import { ImageBackground, Text, StyleSheet, View } from 'react-native'
+import { ImageBackground, Text, StyleSheet, View, TouchableOpacity } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient'
 import type { MovieItemProps } from '../../types/app'
+import { useNavigation, StackActions } from '@react-navigation/native'
 
 const MovieItem = ({ movie, size, coverType }: MovieItemProps): JSX.Element => {
+  const navigation = useNavigation()
+  const pushAction = StackActions.push('MovieDetail', { id: movie.id })
   return (
     <View>
-      <ImageBackground
-        resizeMode="cover"
-        style={[size, styles.backgroundImage]}
-        imageStyle={styles.backgroundImageStyle}
-        source={{
-          uri: `https://image.tmdb.org/t/p/w500${
-            coverType === 'backdrop' ? movie.backdrop_path : movie.poster_path
-          }`,
-        }}
-      >
-        <LinearGradient
-          colors={['#00000000', 'rgba(0, 0, 0, 0.7)']}
-          locations={[0.6, 0.8]}
-          style={styles.gradientStyle}
+    <TouchableOpacity onPress={() => {navigation.dispatch(pushAction)}}>
+        <ImageBackground
+          resizeMode="cover"
+          style={[size, styles.backgroundImage]}
+          imageStyle={styles.backgroundImageStyle}
+          source={{
+            uri: `https://image.tmdb.org/t/p/w500${
+              coverType === 'backdrop' ? movie.backdrop_path : movie.poster_path
+            }`,
+          }}
         >
-          <Text style={styles.movieTitle}>{movie.title}</Text>
-          <View style={styles.ratingContainer}>
-            <FontAwesome name="star" size={16} color="yellow" />
-            <Text style={styles.rating}>{movie.vote_average.toFixed(1)}</Text>
-          </View>
-        </LinearGradient>
-      </ImageBackground>
+          <LinearGradient
+            colors={['#00000000', 'rgba(0, 0, 0, 0.7)']}
+            locations={[0.6, 0.8]}
+            style={styles.gradientStyle}
+          >
+            <Text style={styles.movieTitle}>{movie.title}</Text>
+            <View style={styles.ratingContainer}>
+              <FontAwesome name="star" size={16} color="yellow" />
+              <Text style={styles.rating}>{movie.vote_average.toFixed(1)}</Text>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+      </TouchableOpacity>
     </View>
   )
 }
